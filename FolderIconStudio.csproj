@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>FolderIconStudio</AssemblyName>
+    <RootNamespace>FolderIconStudio</RootNamespace>
+    <ApplicationIcon>app-icon.ico</ApplicationIcon>
+    <Product>文件夹图标设置</Product>
+    <AssemblyTitle>文件夹图标设置</AssemblyTitle>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="app-icon.ico" />
+  </ItemGroup>
+
+</Project>

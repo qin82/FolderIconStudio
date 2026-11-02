@@ -1,0 +1,204 @@
+<Window x:Class="FolderIconStudio.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="文件夹图标设置"
+        Width="1000" Height="640" MinWidth="860" MinHeight="540"
+        WindowStartupLocation="CenterScreen"
+        Background="#F4F5F7"
+        FontFamily="Microsoft YaHei UI"
+        FontSize="13"
+        Foreground="#1F2937"
+        Icon="app-icon.ico"
+        AllowDrop="True" DragOver="Window_DragOver" Drop="Window_Drop">
+
+    <Grid Margin="20,18,20,18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="2,0,2,14">
+            <TextBlock Text="文件夹图标设置" FontSize="22" FontWeight="SemiBold" />
+            <TextBlock Text="导入 ICO 或图片作为文件夹图标。图标会保存在文件夹内部，重装系统或换电脑后依然有效。"
+                       Foreground="#6B7280" Margin="0,6,0,0" TextWrapping="Wrap" />
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="White" CornerRadius="10"
+                    BorderBrush="#E5E8ED" BorderThickness="1">
+                <Grid Margin="14">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <DockPanel Grid.Row="0" Margin="0,0,0,10">
+                        <Button DockPanel.Dock="Right" Content="导入图标 / 图片"
+                                Style="{StaticResource SoftButton}" Click="Import_Click" />
+                        <TextBlock Text="图标库" FontSize="15" FontWeight="SemiBold"
+                                   VerticalAlignment="Center" />
+                    </DockPanel>
+
+                    <Grid Grid.Row="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ComboBox x:Name="LibraryPicker" Grid.Column="0" Height="30"
+                                  VerticalContentAlignment="Center" Padding="6,0"
+                                  DisplayMemberPath="Name"
+                                  SelectionChanged="LibraryPicker_SelectionChanged" />
+                        <Button Grid.Column="1" Content="新建" Style="{StaticResource SoftButton}"
+                                Padding="10,4" FontSize="12" Margin="6,0,0,0"
+                                Click="NewLibrary_Click" ToolTip="新建一个图标库" />
+                        <Button Grid.Column="2" Content="重命名" Style="{StaticResource SoftButton}"
+                                Padding="10,4" FontSize="12" Margin="6,0,0,0"
+                                Click="RenameLibrary_Click" ToolTip="修改当前图标库名称" />
+                        <Button x:Name="DeleteLibraryButton" Grid.Column="3" Content="删除"
+                                Style="{StaticResource SoftButton}" Padding="10,4" FontSize="12"
+                                Margin="6,0,0,0" Click="DeleteLibrary_Click"
+                                ToolTip="删除当前图标库（至少保留一个）" />
+                    </Grid>
+
+                    <Grid Grid.Row="2">
+                        <ListBox x:Name="IconList"
+                                 Background="Transparent" BorderThickness="0"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 ItemContainerStyle="{StaticResource IconItemStyle}"
+                                 ItemTemplate="{StaticResource IconTemplate}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                        </ListBox>
+                        <TextBlock x:Name="EmptyLibraryText"
+                                   Text="当前图标库为空&#10;点击右上角「导入图标 / 图片」&#10;可一次选择多个 ICO、PNG、JPG"
+                                   Foreground="#A0A7B4" TextAlignment="Center" LineHeight="22"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   IsHitTestVisible="False" />
+                    </Grid>
+
+                    <DockPanel Grid.Row="3" Margin="0,10,0,0">
+                        <Button DockPanel.Dock="Right" Content="移除所选"
+                                Style="{StaticResource SoftButton}" Padding="10,5"
+                                Click="RemoveIcon_Click" />
+                        <TextBlock x:Name="LibraryCountText" Foreground="#8A93A2"
+                                   VerticalAlignment="Center" />
+                    </DockPanel>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="2" Background="White" CornerRadius="10"
+                    BorderBrush="#E5E8ED" BorderThickness="1">
+                <Grid Margin="16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <DockPanel Grid.Row="0">
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal"
+                                    VerticalAlignment="Center">
+                            <Button Content="添加文件夹" Style="{StaticResource SoftButton}"
+                                    Click="AddFolders_Click" />
+                            <Button x:Name="ClearFoldersButton" Content="清空"
+                                    Style="{StaticResource SoftButton}"
+                                    Margin="8,0,0,0" Click="ClearFolders_Click" />
+                        </StackPanel>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="目标文件夹" FontSize="15" FontWeight="SemiBold" />
+                            <TextBlock x:Name="FolderCountText" FontSize="11.5"
+                                       Foreground="#98A1AE" Margin="0,3,0,0" />
+                        </StackPanel>
+                    </DockPanel>
+
+                    <Grid Grid.Row="1" Margin="0,12,0,0">
+                        <ListBox x:Name="FolderList"
+                                 Background="#FAFBFC" BorderBrush="#E8EBF0" BorderThickness="1"
+                                 Padding="3" ItemContainerStyle="{StaticResource FolderItemStyle}"
+                                 KeyDown="FolderList_KeyDown">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ToolTip="{Binding Path}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Width="30" Height="30" CornerRadius="6"
+                                                Background="#EEF2FF" VerticalAlignment="Center">
+                                            <Viewbox Width="16" Height="16">
+                                                <Canvas Width="20" Height="20">
+                                                    <Path Fill="#2563EB"
+                                                          Data="M2,4.5 C2,3.7 2.7,3 3.5,3 L8,3 L10.2,5.2 L16.5,5.2 C17.3,5.2 18,5.9 18,6.7 L18,15.5 C18,16.3 17.3,17 16.5,17 L3.5,17 C2.7,17 2,16.3 2,15.5 Z" />
+                                                </Canvas>
+                                            </Viewbox>
+                                        </Border>
+                                        <StackPanel Grid.Column="1" Margin="9,0,0,0"
+                                                    VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}" FontSize="12.5"
+                                                       FontWeight="SemiBold" Foreground="#374151"
+                                                       TextTrimming="CharacterEllipsis" />
+                                            <TextBlock Text="{Binding Path}" FontSize="11"
+                                                       Foreground="#98A1AE" Margin="0,2,0,0"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <TextBlock x:Name="EmptyFoldersText"
+                                   Text="还没有添加文件夹&#10;点击「添加文件夹」，或把文件夹直接拖到这里"
+                                   Foreground="#A0A7B4" TextAlignment="Center" LineHeight="22"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   IsHitTestVisible="False" />
+                    </Grid>
+
+                    <StackPanel Grid.Row="2" Margin="0,12,0,0">
+                        <Border BorderBrush="#EEF0F4" BorderThickness="0,1,0,0" Padding="0,12,0,0">
+                            <StackPanel>
+                                <CheckBox x:Name="RecursiveCheck" Content="同时应用到所有子文件夹"
+                                          Foreground="#4B5563" />
+                                <Grid Margin="0,10,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button x:Name="RepairButton" Grid.Column="0" Content="修复图标"
+                                            Style="{StaticResource SoftButton}"
+                                            Click="Repair_Click"
+                                            ToolTip="换电脑或复制文件夹后如果图标丢失，用此功能重新激活" />
+                                    <Button x:Name="RestoreButton" Grid.Column="2" Content="恢复默认"
+                                            Style="{StaticResource SoftButton}"
+                                            Click="Restore_Click"
+                                            ToolTip="清除本程序设置的图标，恢复文件夹默认外观" />
+                                    <Button x:Name="ApplyButton" Grid.Column="4" Content="应用图标"
+                                            Style="{StaticResource PrimaryButton}" Click="Apply_Click" />
+                                </Grid>
+                                <TextBlock x:Name="StatusText" Margin="0,10,0,0" MinHeight="18"
+                                           Foreground="#6B7280" TextWrapping="Wrap" />
+                                <TextBlock FontSize="11" Foreground="#98A1AE" TextWrapping="Wrap"
+                                           Margin="0,8,0,0"
+                                           Text="提示：右键「设置文件夹图标」可打开选择窗口；右键菜单里每个图标库单独列出，点图标即可直接应用（图标较多时自动分页）。Windows 11 需要先点「显示更多选项」。关闭程序后右键菜单仍可正常使用。" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
